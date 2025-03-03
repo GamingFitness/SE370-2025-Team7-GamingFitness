@@ -1,0 +1,28 @@
+﻿body {
+    margin: 0;
+}
+
+#html, #canvas {
+    position: absolute;
+    width: 100%;
+}
+
+#html {
+    text-align: center;
+    font-size: xx-large;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    color: #fff;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+#buttons {
+    position: absolute;
+    bottom: 0;
+    margin: 10px;
+    font-size: large;
+    margin-right: 2px;
+}
+
+button {
+    margin-left: 5px;
+}

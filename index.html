@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <title>Gaming Fitness</title>
+    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style/main.css" />
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="html"><p></p></div>
+    <div id="buttons"></div>
+
+    <script type="text/javascript" src="js/actor.js"></script>
+    <script type="text/javascript">
+//=     ------JAVASCRIPT CODE STARTS HERE------     =\\
+
+//===================VARIABLES====================== 
+        const BACKGROUND = 0;
+        const FOREGROUND = 1;
+        //NEW
+        const PROJECTILE = 2;
+
+        const canvas = document.querySelector("canvas");
+        const context = canvas.getContext('2d');
+        const drawables = []
+
+        //Global bastards to be called for data
+        drawables[BACKGROUND] = []
+        drawables[FOREGROUND] = []
+
+        //NEW
+        drawables[PROJECTILE] = []
+        
+        //Sets the background
+        drawables[BACKGROUND].push(new Background('beach', 7))
+
+        
+//===================FUNCTIONS====================== 
+
+        website = async () => {
+            resize();
+
+        }
+
+        //Gathers animation data for select sprites and pushes each as an Actor
+        get_player = async () => {
+
+            //Grabs the Players sprites from the json, sets as actor
+            let animdataxhr = await fetch("PowerGolem/animationData.json")
+            let animdata = await animdataxhr.json()
+            const Player = new Actor("PowerGolem",animdata, 1, 1, 0, 0, 0, "Idle","False","True","PLAYER");
+            
+            //Grabs the Enemies sprites from the json, sets as actor
+            animdataxhr = await fetch("MightGolem/animationData.json")
+            animdata = await animdataxhr.json()
+                                                                   //width
+            const Enemy = new Actor("MightGolem",animdata, 550, 1, 0, 0, 0, "Idle","False","True","PLAYER");
+
+            //Pushes both actors into the foreground
+            drawables[FOREGROUND].push(Player);
+            //drawables[FOREGROUND].push(Enemy);
+
+            console.log("MIGHT GOLEM initial data:")
+            console.log(drawables[FOREGROUND][1])
+
+            //%%DEBUG
+            //console.log("PLAYER:")
+            //console.log(Player)
+        }
+
+        //NEW TEST
+        SummonHorde1 = async (sprite) => {
+            
+            //Grabs the Enemy sprites from the json, sets as actor
+            let animdataxhr = await fetch(sprite + "/animationData.json")
+            let animdata = await animdataxhr.json()
+            const Enemy1 = new Actor(sprite,animdata, 400, 0, 0, 0, 0, "Idle","False","True","ENEMY");
+            
+            //Grabs the Enemies sprites from the json, sets as actor
+            animdataxhr = await fetch(sprite + "/animationData.json")
+            animdata = await animdataxhr.json()
+            const Enemy2 = new Actor(sprite,animdata, 500, 120, 0, 0, 0, "Idle","False","True","ENEMY");
+
+            //Grabs the Enemies sprites from the json, sets as actor
+            animdataxhr = await fetch(sprite + "/animationData.json")
+            animdata = await animdataxhr.json()
+            const Enemy3 = new Actor(sprite,animdata, 670, 30, 0, 0, 0, "Idle","False","True","ENEMY");
+
+            //Pushes both actors into the foreground
+            drawables[FOREGROUND].push(Enemy1);
+            drawables[FOREGROUND].push(Enemy2);
+            drawables[FOREGROUND].push(Enemy3);
+        }
+
+        //Draws all background and foreground objects
+        draw_loop = () => {
+            // draws background
+            drawables[BACKGROUND].forEach((d) => d.draw())
+
+            // draw sprites
+            drawables[FOREGROUND].forEach((d) => d.draw())
+        }
+
+        //NEW will clear out arrays in preperation for next level
+        clear_level = async () => {
+
+        }
+
+        //Resizes canvas to accomidate window size changes
+        resize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+
+        //Pushes speeding projectile actor at select location
+        shoot_projectile = async () => {
+            //if(drawables[FOREGROUND][9] == null||drawables[FOREGROUND][9].exist == "False"){
+
+            
+            console.log("Projectile being SHOT")
+            let animdataxhr = await fetch("ThunderBullet/animationData.json")
+            let animdata = await animdataxhr.json()
+
+            let firing_posX = drawables[FOREGROUND][0].x;
+            let firing_posY = drawables[FOREGROUND][0].y;
+
+            //const name = new Actor(name,sprite_json, x, y, height, width, x_v, start_state, exist);
+                                                                                                    //w h
+            drawables[FOREGROUND].push(new Actor("ThunderBullet",animdata, firing_posX, firing_posY, 0, 0, 50, "Projectile","False","True","PROJECTILE"));
+        }
+
+        //ALL IMPORTANT FUNCTION: Calls all necissary functions
+        fn = () => {
+            resize();
+
+            get_player();
+            SummonHorde1("MightGolem");
+
+
+            //---------SET FRAME RATE HERE------------
+            setInterval(draw_loop, 5000 / 30);
+        }
+
+        /* NEW would set up given level for player, background and enemies for given class*/
+        Sorcerer_1 = () => {
+
+        }
+
+//===================MAIN====================== 
+        if (document.readyState !== 'loading')
+
+            fn();
+        else
+            document.addEventListener('DOMContentLoaded', fn);
+
+
+//===================KEYINPUT====================== 
+    //****BUG****
+    //keys entered twice, drawables[FOREGROUND].forEach((d) 
+    //Fixed by only working for first actor in array
+
+        document.body.onkeydown = (e) => {
+            
+            drawables[FOREGROUND].forEach((d) => {
+
+                //%%DEBUG
+                //console.log("PLAYER (in keydown):")
+                //console.log(drawables[FOREGROUND][0])
+                if(d == drawables[FOREGROUND][0]){
+                    //%%DEBUG
+                    //console.log("SPRITE CALLED:")
+                    //console.log(d)
+                    //console.log(" ")
+                switch (e.key) {
+//================ ## CHANGES MADE TO d.state for test
+                    case "ArrowLeft":
+                        d.x_v = -10
+                        //d.state = 'walk_W'
+                        break
+                    case "ArrowUp":
+                        d.y_v = -10
+                        //d.state = 'walk_N'
+                        break
+                    case "ArrowRight":
+                        d.x_v = 10
+                        //d.state = 'walk_E'
+                        break
+                    case "ArrowDown":
+                        d.y_v = 10
+                        //d.state = 'walk_S'
+                        break
+                    case " ":
+                        console.log("SPACE KEY PRESSED")
+                        d.changeAnimation('Shooting');
+                        shoot_projectile();
+                        /*
+                        d.state = 'Shooting'
+                        //NEW indicates animation change
+                        d.anim_change = 'True'
+                        //you could also just directly set cur_frame = 0 with:
+                        //d.cur_frame = 0;
+
+                        //NEW preloads the first frame of shooting animation to avoid blank frame
+                        d.sprite_json[d.root_e][d.state][0]['img'] = new Image();
+                        // Set image source
+                        d.sprite_json[d.root_e][d.state][0]['img'].src = d.name + '/' + d.root_e + '/' + d.state + '/' + 0 + '.png';
+                        shoot_projectile()
+                        break
+                        */
+                }
+            }
+            })
+        
+        };
+
+
+        /*FLAWED KEY INPUT
+        drawables[FOREGROUND].forEach((d) => {
+                console.log("SPRITE CALLED:")
+                console.log(d)
+                console.log(" ")
+                switch (e.key) {
+
+                    case "ArrowLeft":
+                        d.x_v = -10
+                        d.state = 'walk_W'
+                        break
+                    case "ArrowUp":
+                        d.y_v = -10
+                        d.state = 'walk_N'
+                        break
+                    case "ArrowRight":
+                        d.x_v = 10
+                        d.state = 'walk_E'
+                        break
+                    case "ArrowDown":
+                        d.y_v = 10
+                        d.state = 'walk_S'
+                        break
+                    case " ":
+                        console.log("SPACE KEY PRESSED")
+                        d.state = 'Shooting'
+                        shoot_projectile()
+                        break
+                }
+            })
+        };
+        */
+
+
+        document.body.onkeyup = (e) => {
+            drawables[FOREGROUND].forEach((d) => {
+
+                if(d == drawables[FOREGROUND][0]){
+                switch (e.key) {
+                    case "ArrowLeft":
+                    case "ArrowRight":
+                        d.x_v = 0
+                        break
+                    case "ArrowUp":
+                    case "ArrowDown":
+                        d.y_v = 0
+                        break
+                }
+            }
+            })
+        };
+//===================================================
+    </script>
+
+</body>
+</html>
