@@ -5,11 +5,38 @@
     <meta name="viewport" content="width=device-width" />
     <meta charset="utf-8" />
     <link rel="stylesheet" href="style/main.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 </head>
 <body>
     <canvas id="canvas"></canvas>
     <div id="html"><p></p></div>
     <div id="buttons"></div>
+
+    <div id="main" style="display:none"> 
+
+        <!-- ============ MENU SCREEN ============ -->
+        <style>
+            .menu_title {font-size:600%; position: absolute; z-index: -100;  width: 100%; top:14%; margin: 20px; }
+        </style>
+                
+            <h1 class="menu_title">
+                Gaming Fitness
+            </h1>
+        
+        
+        
+        
+        <style>
+            .menu_buttoons {position: absolute; z-index: 100;  width: 100%; top:44%; margin: 20px; }
+        </style>
+            
+            <h1 class="menu_buttoons">
+            <button id="but_start" onclick="game();" style="font-size:50px">Start Game</button>
+            </h1>
+        
+        <!-- ============ ----------- ============ -->
+        
+    </div> 
 
     <script type="text/javascript" src="js/actor.js"></script>
     <script type="text/javascript">
@@ -40,7 +67,18 @@
 
         website = async () => {
             resize();
+            $('#main').show();
+            console.log("FUNCTION: website() /IS RUNNING")
+        }
 
+        game = () => {
+            $('#main').hide();
+            get_player();
+            SummonHorde1("MightGolem");
+
+            //---------SET FRAME RATE HERE------------
+            setInterval(draw_loop, 5000 / 30);
+            console.log("FUNCTION: game() /IS RUNNING")
         }
 
         //Gathers animation data for select sprites and pushes each as an Actor
@@ -134,13 +172,14 @@
         //ALL IMPORTANT FUNCTION: Calls all necissary functions
         fn = () => {
             resize();
+            website();
+            
 
-            get_player();
-            SummonHorde1("MightGolem");
-
+            //get_player();
+            //SummonHorde1("MightGolem");
 
             //---------SET FRAME RATE HERE------------
-            setInterval(draw_loop, 5000 / 30);
+            //setInterval(draw_loop, 5000 / 30);
         }
 
         /* NEW would set up given level for player, background and enemies for given class*/
@@ -149,9 +188,9 @@
         }
 
 //===================MAIN====================== 
-        if (document.readyState !== 'loading')
-
+        if (document.readyState !== 'loading'){
             fn();
+        }
         else
             document.addEventListener('DOMContentLoaded', fn);
 
