@@ -14,31 +14,17 @@
 
     <div id="main" style="display:none"> 
 
-        <!-- ============ NAVIGATION BAR ============ -->
-        <nav id="navbar">
-            <div id="logo">Gaming Fitness</div>
-            <div id="nav-links">
-                <button class="nav-button" onclick="showAbout()">About Us</button>
-                <button class="nav-button" onclick="showLogin()">Login / Signup</button>
-            </div>
-        </nav>
-
-        <!-- ============ LOGIN MODEL (Hidden by Default) ============ -->
-        <div id="login-model" class="model">
-            <div class="model-content">
-                <span class="close" onclick="closeLogin()">&times;</span>
-                <h2>Login</h2>
-                <input type="text" id="username" placeholder="Username">
-                <input type="password" id="password" placeholder="Password">
-                <button onclick="login()">Login</button>
-                <p id="login-message"></p>
-            </div>
-        </div>
-
         <!-- ============ MENU SCREEN ============ -->
         <style>
             .menu_title {font-size:600%; position: absolute; z-index: -100;  width: 100%; top:14%; margin: 20px; }
-        </style>        
+        </style>
+                
+            <h1 class="menu_title">
+                Gaming Fitness
+            </h1>
+        
+        
+        
         
         <style>
             .menu_buttoons {position: absolute; z-index: 100;  width: 100%; top:44%; margin: 20px; }
@@ -74,7 +60,7 @@
         drawables[PROJECTILE] = []
         
         //Sets the background
-        drawables[BACKGROUND].push(new Background('beach', 7))
+        drawables[BACKGROUND].push(new Background('castle', 7))
 
         
 //===================FUNCTIONS====================== 
@@ -82,39 +68,33 @@
         website = async () => {
             resize();
             $('#main').show();
-            $('#login-model').hide();
             console.log("FUNCTION: website() /IS RUNNING")
-        }
-
-        showAbout = () => {
-            /*add show about page stuff*/
-        }
-
-        showLogin = () => {
-            document.getElementById("login-model").style.display = "flex";
-        }
-
-        closeLogin = () => {
-            document.getElementById("login-model").style.display = "none";
         }
 
         game = () => {
             $('#main').hide();
-            get_player();
+
+            get_player("VampiricOverlord");
+            //get_player("PowerGolem");
+
             SummonHorde1("MightGolem");
 
             //---------SET FRAME RATE HERE------------
-            setInterval(draw_loop, 5000 / 30);
+            setInterval(draw_loop, 5000/40);
+
+            //40 is good speed, 30 was og
+            //setInterval(draw_loop, 5000 / 40);
+            //setInterval(draw_loop, 5000 / 30);
             console.log("FUNCTION: game() /IS RUNNING")
         }
 
         //Gathers animation data for select sprites and pushes each as an Actor
-        get_player = async () => {
+        get_player = async (sprite) => {
 
             //Grabs the Players sprites from the json, sets as actor
-            let animdataxhr = await fetch("sprites/PowerGolem/animationData.json")
+            let animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
             let animdata = await animdataxhr.json()
-            const Player = new Actor("PowerGolem",animdata, 1, 1, 0, 0, 0, "Idle","False","True","PLAYER");
+            const Player = new Actor(sprite,animdata, 1, 1, 0, 0, 0, "Idle","False","True","PLAYER");
             
             //Pushes both actors into the foreground
             drawables[FOREGROUND].push(Player);
