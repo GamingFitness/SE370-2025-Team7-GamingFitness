@@ -55,7 +55,21 @@ class Actor {
         } 
         
         if(this.cur_frame >= this.sprite_json[this.root_e][this.state].length && this.state == "Shooting"){
+        //if(this.cur_frame >= 29 && this.state == "Shooting"){
+            //NEW 
+            // Needed or else tries to load the ith frame it is on for shooting
+            // animation into the idle animation
+            this.cur_frame = 0;
             this.state = "Idle";
+
+        }
+
+        if(this.state == "Shooting"){
+            console.log("LENGTH OF ANIMATION");
+            console.log(this.sprite_json[this.root_e][this.state].length);
+            console.log("======================================");
+            console.log("FRAME NUM");
+            console.log(this.cur_frame);
         }
 
 
@@ -143,10 +157,12 @@ class Actor {
     if(this.ID == "PROJECTILE"){
 
         for(let i = 1; i < drawables[FOREGROUND].length; i++){
+            /* DEBUG
             console.log("================");
             console.log("ARRAY ELEMENT: " + i);
             console.log(drawables[FOREGROUND][i].ID);
             console.log("================");
+            */
             if(
                 this.x + this.width >= drawables[FOREGROUND][i].x &&
                 this.x <= drawables[FOREGROUND][i].x + drawables[FOREGROUND][i].width &&
@@ -327,6 +343,7 @@ class Actor {
         this.sprite_json[this.root_e][this.state][0]['img'] = new Image();
         // Set image source
         this.sprite_json[this.root_e][this.state][0]['img'].src = "sprites/" + this.name + '/' + this.root_e + '/' + this.state + '/' + 0 + '.png';
+
     }
 }
 
