@@ -14,6 +14,27 @@
 
     <div id="main" style="display:none"> 
 
+        <!-- ============ NAVIGATION BAR ============ -->
+        <nav id="navbar">
+            <div id="logo">Gaming Fitness</div>
+            <div id="nav-links">
+                <button class="nav-button" onclick="showAbout()">About Us</button>
+                <button class="nav-button" onclick="showLogin()">Login / Signup</button>
+            </div>
+        </nav>
+
+        <!-- ============ LOGIN MODEL (Hidden by Default) ============ -->
+        <div id="login-model" class="model">
+            <div class="model-content">
+                <span class="close" onclick="closeLogin()">&times;</span>
+                <h2>Login</h2>
+                <input type="text" id="username" placeholder="Username">
+                <input type="password" id="password" placeholder="Password">
+                <button onclick="login()">Login</button>
+                <p id="login-message"></p>
+            </div>
+        </div>
+
         <!-- ============ MENU SCREEN ============ -->
         <style>
             .menu_title {font-size:600%; position: absolute; z-index: -100;  width: 100%; top:14%; margin: 20px; }
@@ -68,7 +89,20 @@
         website = async () => {
             resize();
             $('#main').show();
+            $('#login-model').hide();
             console.log("FUNCTION: website() /IS RUNNING")
+        }
+
+        showAbout = () => {
+            /*add show about page stuff*/
+        }
+
+        showLogin = () => {
+            document.getElementById("login-model").style.display = "flex";
+        }
+
+        closeLogin = () => {
+            document.getElementById("login-model").style.display = "none";
         }
 
         game = () => {
