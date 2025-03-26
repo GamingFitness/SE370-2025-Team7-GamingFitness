@@ -27,35 +27,61 @@
         <div id="login-model" class="model">
             <div class="model-content">
                 <span class="close" onclick="closeLogin()">&times;</span>
-                <h2>Login</h2>
+                <h2>Login or Sign Up</h2>
                 <input type="text" id="username" placeholder="Username">
+                <input type="email" id="email" placeholder="Email (For Signup)" style="display:none;">
                 <input type="password" id="password" placeholder="Password">
                 <button onclick="login()">Login</button>
+                <button id="signup-btn" onclick="signup()">Sign Up</button>
                 <p id="login-message"></p>
             </div>
         </div>
 
-        <!-- ============ MENU SCREEN ============ -->
-        <style>
-            .menu_title {font-size:600%; position: absolute; z-index: -100;  width: 100%; top:14%; margin: 20px; }
-        </style>
-                
-            <h1 class="menu_title">
-                Gaming Fitness
-            </h1>
-        
-        
-        
-        
-        <style>
-            .menu_buttoons {position: absolute; z-index: 100;  width: 100%; top:44%; margin: 20px; }
-        </style>
+        <!-- ============ START GAME SCREEN ============ -->
+        <div id="main-menu">
+            <style>
+                .menu_title {font-size:600%; position: absolute; z-index: -100;  width: 100%; top:14%; margin: 20px; }
+            </style>        
             
+            <style>
+                .menu_buttoons {position: absolute; z-index: 100;  width: 100%; top:44%; margin: 20px; }
+            </style>
+                
             <h1 class="menu_buttoons">
-            <button id="but_start" onclick="game();" style="font-size:50px">Start Game</button>
+                <button id="but_start" onclick="showSelectionScreen();" style="font-size:50px">Start Game</button>
             </h1>
+        </div>
         
-        <!-- ============ ----------- ============ -->
+        <!-- ============ MENU SCREEN (Hidden By Default) ============ -->
+        <div id="selection-screen" class="model">
+            <h2>Choose Your Workout Type</h2>
+            <div class="selection-container">
+                <div class="selection-box">
+                    <img src="sprites\PowerGolem\Tenderbud\Idle\0.png" alt="Endurance Training">
+                    <p>Improve your stamina with endurance exercises.</p>
+                    <button id="but_start" onclick="game();" style="font-size:25px">Endurance</button>
+                    <!-- <button onclick="startGame('Endurance')">Select</button> -->
+                </div>
+                <div class="selection-box">
+                    <img src="sprites\PowerGolem\Tenderbud\Idle\3.png" alt="Strength Training">
+                    <p>Build muscle and strength with targeted workouts.</p>
+                    <button id="but_start" onclick="game();" style="font-size:25px">Strength</button>
+                    <!-- <button onclick="startGame('Strength')">Select</button> --> 
+                </div>
+                <div class="selection-box">
+                    <img src="sprites\PowerGolem\Tenderbud\Idle\5.png" alt="Yoga & Flexibility">
+                    <p>Enhance flexibility and relaxation through yoga.</p>
+                    <button id="but_start" onclick="game();" style="font-size:25px">Yoga</button>
+                <!-- <button onclick="startGame('Yoga')">Select</button> -->
+                </div>
+                <div class="selection-box">
+                    <img src="sprites\PowerGolem\Tenderbud\Idle\7.png" alt="Cardio Training">
+                    <p>Boost heart health with high-intensity cardio.</p>
+                    <button id="but_start" onclick="game();" style="font-size:25px">Cardio</button>
+                    <!-- <button onclick="startGame('Cardio')">Select</button> -->
+                </div>
+            </div>
+        </div>
         
     </div> 
 
@@ -81,8 +107,7 @@
         drawables[PROJECTILE] = []
         
         //Sets the background
-        drawables[BACKGROUND].push(new Background('castle', 7))
-
+        drawables[BACKGROUND].push(new Background('beach', 7))
         
 //===================FUNCTIONS====================== 
 
@@ -90,46 +115,93 @@
             resize();
             $('#main').show();
             $('#login-model').hide();
+            $('#selection-screen').hide();
             console.log("FUNCTION: website() /IS RUNNING")
+        }
+
+        //show the selection screen
+        showSelectionScreen = () => {
+            $('#main-menu').hide(); // Hide main menu
+            $('#selection-screen').fadeIn(300); // Smoothly show selection screen
+            console.log("FUNCTION: showSelectionScreen() / IS RUNNING");
         }
 
         showAbout = () => {
             /*add show about page stuff*/
         }
 
+        //show login/signup popup
         showLogin = () => {
             document.getElementById("login-model").style.display = "flex";
         }
 
+        //close login popup
         closeLogin = () => {
             document.getElementById("login-model").style.display = "none";
         }
 
+        login = () => {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+
+            fetch("http://localhost:8080/user", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `action=login&username=${username}&password=${password}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data === "success") {
+                    document.getElementById("login-message").innerText = "Login Successful!";
+                    setTimeout(() => window.location.href = "dashboard.html", 1000);
+                } else {
+                    document.getElementById("login-message").innerText = "Invalid username or password.";
+                }
+            });
+        }
+
+        signUp = () => {
+            let username = document.getElementById("username").value;
+            let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+
+            fetch("http://localhost:8080/user", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `action=signup&username=${username}&email=${email}&password=${password}`
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data === "success") {
+                    document.getElementById("login-message").innerText = "Signup Successful! You can now log in.";
+                } else {
+                    document.getElementById("login-message").innerText = "Error: Try a different username.";
+                }
+            });
+        }
+
+        //show the game screen
         game = () => {
             $('#main').hide();
-
-            get_player("VampiricOverlord");
-            //get_player("PowerGolem");
-
+            $('#selection-screen').hide();
+            //get_player("VampiricOverlord");
+            get_player("PowerGolem");
+            //SummonHorde1("MightGolem");
             SummonHorde1("MightGolem");
 
             //---------SET FRAME RATE HERE------------
-            setInterval(draw_loop, 5000/40);
-
-            //40 is good speed, 30 was og
-            //setInterval(draw_loop, 5000 / 40);
-            //setInterval(draw_loop, 5000 / 30);
+            setInterval(draw_loop, 5000 / 30);
             console.log("FUNCTION: game() /IS RUNNING")
         }
 
         //Gathers animation data for select sprites and pushes each as an Actor
-        get_player = async (sprite) => {
+        get_player = async () => {
 
             //Grabs the Players sprites from the json, sets as actor
-            let animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
+            let animdataxhr = await fetch("sprites/PowerGolem/animationData.json")
             let animdata = await animdataxhr.json()
-            const Player = new Actor(sprite,animdata, 1, 1, 0, 0, 0, "Idle","False","True","PLAYER");
-            
+            const Player = new Actor("PowerGolem",animdata, 1, 1, 0, 0, 0, "Idle","False","True","PLAYER");
+
             //Pushes both actors into the foreground
             drawables[FOREGROUND].push(Player);
 
@@ -209,8 +281,8 @@
             website();
             
 
-            //get_player();
-            //SummonHorde1("MightGolem");
+            get_player();
+            SummonHorde1("MightGolem");
 
             //---------SET FRAME RATE HERE------------
             //setInterval(draw_loop, 5000 / 30);
