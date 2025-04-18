@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <title>Gaming Fitness</title>
+    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style/main.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="html"><p></p></div>
+    <div id="buttons"></div>
+
+    <div id="main" style="display:none"> 
+
+        <!-- ============ NAVIGATION BAR ============ -->
+        <nav id="navbar">
+            <div id="logo">Gaming Fitness</div>
+            <div id="nav-links">
+                <span id="user-display"></span>
+                <button class="nav-button" onclick="showAbout()">About Us</button>
+                <button class="nav-button" id="auth-button" onclick="showLogin()">Login / Signup</button>                
+            </div>
+        </nav>
+
+        <!-- ============ LOGIN MODEL (Hidden by Default) ============ -->
+        <div id="login-model" class="model">
+            <div class="model-content">
+                <span class="close" onclick="closeLogin()">&times;</span>
+                <h2>Login or Sign Up</h2>
+                <form id="authForm">
+                    <input type="text" id="username" placeholder="Username">
+                    <input type="password" id="password" placeholder="Password">
+                    <input type="password" id="confirm-password" placeholder="Confirm Password" style="display: none;">
+                    <button type="submit" id="login-btn">Login</button>
+                    <button id="signup-btn" onclick="signup()">Sign Up</button>
+                </form>
+                <!-- sign up error msgs -->
+                <p id="usernameError" style="color: red; display: none;">Username already exists.</p>
+                <p id="passwordError" style="color: red; display: none;">Passwords do not match.</p>
+
+            </div>
+        </div>
+
+        <!-- ============ START GAME SCREEN ============ -->
+        <div id="main-menu">
+            <style>
+                .menu_title {font-size:600%; position: absolute; z-index: -100;  width: 100%; top:14%; margin: 20px; }
+            </style>        
+            
+            <style>
+                .menu_buttoons {position: absolute; z-index: 100;  width: 100%; top:44%; margin: 20px; }
+            </style>
+                
+            <h1 class="menu_buttoons">
+                <button id="but_start" onclick="showSelectionScreen();" style="font-size:50px">Start Game</button>
+            </h1>
+        </div>
+        
+        <!-- ============ MENU SCREEN (Hidden By Default) ============ -->
+        <div id="selection-screen" class="model">
+            <h2>Choose Your Workout Type</h2>
+
+            <style>
+                .selection-box-1 {position: absolute; z-index: 100;  width: 100%; top:1%; left:0%; margin: 20px; }
+                .selection-box-2 {position: absolute; z-index: 100;  width: 100%; top:1%; left:25%; margin: 20px; }
+                .selection-box-3 {position: absolute; z-index: 100;  width: 100%; top:1%; left:50%; margin: 20px; }
+                .selection-box-4 {position: absolute; z-index: 100;  width: 100%; top:1%; left:75%; margin: 20px; }
+            </style>
+            
+            <div class="selection-container">
+                <div class="selection-box-1">
+                    <img src="sprites\MightGolem\Tenderbud\Idle\5.png" alt="Endurance Training">
+                    <p>Improve your stamina with endurance exercises.</p>
+                    <button id="but_start" onclick="Endurance();" style="font-size:25px">Endurance</button>
+                    <!-- <button onclick="startGame('Endurance')">Select</button> -->
+                </div>
+                <div class="selection-box-2">
+                    <img src="sprites\MightGolem\Tenderbud\Idle\3.png" alt="Strength Training">
+                    <p>Build muscle and strength with targeted workouts.</p>
+                    <button id="but_start" onclick="Strength();" style="font-size:25px">Strength</button>
+                    <!-- <button onclick="startGame('Strength')">Select</button> --> 
+                </div>
+                <div class="selection-box-3">
+                    <img src="sprites\PowerGolem\Tenderbud\Idle\1.png" alt="Yoga & Flexibility">
+                    <p>Enhance flexibility and relaxation through yoga.</p>
+                    <button id="but_start" onclick="Yoga();" style="font-size:25px">Yoga</button>
+                <!-- <button onclick="startGame('Yoga')">Select</button> -->
+                </div>
+                <div class="selection-box-4">
+                    <img src="sprites\VampiricOverlord\Tenderbud\Shooting\7.png" alt="Cardio Training">
+                    <p>Boost heart health with high-intensity cardio.</p>
+                    <button id="but_start" onclick="Cardio();" style="font-size:25px">Cardio</button>
+                    <!-- <button onclick="startGame('Cardio')">Select</button> -->
+                </div>
+            </div>
+        </div>
+        
+    </div> 
+
+    <script type="text/javascript" src="js/actor.js"></script>
+    <script src="js/signup.js"></script>
+    <script src="js/login.js"></script>
+
+    <script type="text/javascript">
+
+
+
+
+
+
+//:::::::::::::::::::::::::::=     >------JAVASCRIPT CODE STARTS HERE------<     =:::::::::::::::::::::::::::\\
+
+//===================VARIABLES====================== 
+        const BACKGROUND = 0;
+        const FOREGROUND = 1;
+        //NEW
+        const PROJECTILE = 2;
+
+        const canvas = document.querySelector("canvas");
+        const context = canvas.getContext('2d');
+        const drawables = []
+
+        //Global bastards to be called for data
+        drawables[BACKGROUND] = []
+        drawables[FOREGROUND] = []
+
+        //NEW
+        drawables[PROJECTILE] = []
+        
+
+
+//===================WEBSITE FUNCTIONS====================== 
+
+        website = async () => {
+            resize();
+            $('#main').show();
+            $('#login-model').hide();
+            $('#selection-screen').hide();
+            console.log("FUNCTION: website() /IS RUNNING")
+        }
+
+        //show the selection screen
+        showSelectionScreen = () => {
+            $('#main-menu').hide(); // Hide main menu
+            $('#selection-screen').fadeIn(300); // Smoothly show selection screen
+            console.log("FUNCTION: showSelectionScreen() / IS RUNNING");
+        }
+
+        showAbout = () => {
+            /*add show about page stuff*/
+        }
+
+        //show login/signup popup
+        showLogin = () => {
+            document.getElementById("login-model").style.display = "flex";
+            document.getElementById("confirm-password").style.display = "none";
+            document.getElementById("confirm-password").value = "";
+        }
+
+        //close login popup
+        closeLogin = () => {
+            document.getElementById("login-model").style.display = "none";
+        }
+
+//===================GAME FUNCTIONS====================== 
+
+//=======LEVELS=======
+        //show the game screen
+        Endurance = () => {
+            $('#main').hide();
+            $('#selection-screen').hide();
+
+            //Sets the background
+            drawables[BACKGROUND].push(new Background('castle', 7))
+
+            get_player("VampiricOverlord");
+            SummonHorde1("MightGolem");
+
+            //---------SET FRAME RATE HERE------------
+            setInterval(draw_loop, 5000 / 30);
+            console.log("FUNCTION: game() /IS RUNNING")
+        }
+
+        Strength = () => {
+            $('#main').hide();
+            $('#selection-screen').hide();
+
+            //Sets the background
+            drawables[BACKGROUND].push(new Background('castle', 7))
+
+            get_player("VampiricOverlord");
+            SummonHorde1("MightGolem");
+
+            //---------SET FRAME RATE HERE------------
+            setInterval(draw_loop, 5000 / 30);
+            console.log("FUNCTION: game() /IS RUNNING")
+        }
+
+        Yoga = () => {
+            $('#main').hide();
+            $('#selection-screen').hide();
+
+            //Sets the background
+            drawables[BACKGROUND].push(new Background('beach', 7))
+
+            get_player("PowerGolem");
+            SummonHorde1("MightGolem");
+
+            //---------SET FRAME RATE HERE------------
+            setInterval(draw_loop, 5000 / 30);
+            console.log("FUNCTION: game() /IS RUNNING")
+        }
+
+        Cardio = () => {
+            $('#main').hide();
+            $('#selection-screen').hide();
+
+            //Sets the background
+            drawables[BACKGROUND].push(new Background('castle', 7))
+
+            get_player("VampiricOverlord");
+            SummonHorde1("MightGolem");
+
+            //---------SET FRAME RATE HERE------------
+            setInterval(draw_loop, 5000 / 30);
+            console.log("FUNCTION: game() /IS RUNNING")
+        }
+
+//====================
+
+
+        //Gathers animation data for select sprites and pushes each as an Actor
+        get_player = async (sprite) => {
+
+            //Grabs the Players sprites from the json, sets as actor
+            let animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
+            let animdata = await animdataxhr.json()
+            const Player = new Actor(sprite,animdata, 1, 1, 0, 0, 0, "Idle","False","True","PLAYER");
+
+            //Pushes both actors into the foreground
+            drawables[FOREGROUND].push(Player);
+
+            console.log("PLAYER initial data:")
+            console.log(drawables[FOREGROUND][0])
+
+            //%%DEBUG
+            //console.log("PLAYER:")
+            //console.log(Player)
+        }
+
+        //NEW TEST
+        SummonHorde1 = async (sprite) => {
+            
+            //Grabs the Enemy sprites from the json, sets as actor
+            let animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
+            let animdata = await animdataxhr.json()
+            const Enemy1 = new Actor(sprite,animdata, 400, 0, 0, 0, 0, "Idle","False","True","ENEMY");
+            
+            //Grabs the Enemies sprites from the json, sets as actor
+            animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
+            animdata = await animdataxhr.json()
+            const Enemy2 = new Actor(sprite,animdata, 500, 120, 0, 0, 0, "Idle","False","True","ENEMY");
+
+            //Grabs the Enemies sprites from the json, sets as actor
+            animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
+            animdata = await animdataxhr.json()
+            const Enemy3 = new Actor(sprite,animdata, 670, 30, 0, 0, 0, "Idle","False","True","ENEMY");
+
+            //Pushes both actors into the foreground
+            drawables[FOREGROUND].push(Enemy1);
+            drawables[FOREGROUND].push(Enemy2);
+            drawables[FOREGROUND].push(Enemy3);
+        }
+
+        //Draws all background and foreground objects
+        draw_loop = () => {
+            // draws background
+            drawables[BACKGROUND].forEach((d) => d.draw())
+
+            // draw sprites
+            drawables[FOREGROUND].forEach((d) => d.draw())
+        }
+
+        //NEW will clear out arrays in preperation for next level
+        clear_level = async () => {
+
+        }
+
+        //Resizes canvas to accomidate window size changes
+        resize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+
+        //Pushes speeding projectile actor at select location
+        shoot_projectile = async () => {
+            //if(drawables[FOREGROUND][9] == null||drawables[FOREGROUND][9].exist == "False"){
+
+            
+            console.log("Projectile being SHOT")
+            let animdataxhr = await fetch("sprites/ThunderBullet/animationData.json")
+            let animdata = await animdataxhr.json()
+
+            let firing_posX = drawables[FOREGROUND][0].x;
+            let firing_posY = drawables[FOREGROUND][0].y;
+
+            //const name = new Actor(name,sprite_json, x, y, height, width, x_v, start_state, exist);
+                                                                                                    //w h
+            drawables[FOREGROUND].push(new Actor("ThunderBullet",animdata, firing_posX, firing_posY, 0, 0, 50, "Projectile","False","True","PROJECTILE"));
+        }
+
+        //ALL IMPORTANT FUNCTION: Calls all necissary functions
+        fn = () => {
+            resize();
+            website();
+            
+
+            //get_player();
+            //SummonHorde1("MightGolem");
+
+            //---------SET FRAME RATE HERE------------
+            //setInterval(draw_loop, 5000 / 30);
+        }
+
+        /* NEW would set up given level for player, background and enemies for given class*/
+        Sorcerer_1 = () => {
+
+        }
+
+//===================MAIN====================== 
+        if (document.readyState !== 'loading'){
+            fn();
+        }
+        else
+            document.addEventListener('DOMContentLoaded', fn);
+
+
+//===================KEYINPUT====================== 
+    //****BUG****
+    //keys entered twice, drawables[FOREGROUND].forEach((d) 
+    //Fixed by only working for first actor in array
+
+        document.body.onkeydown = (e) => {
+            
+            drawables[FOREGROUND].forEach((d) => {
+
+                //%%DEBUG
+                //console.log("PLAYER (in keydown):")
+                //console.log(drawables[FOREGROUND][0])
+                if(d == drawables[FOREGROUND][0]){
+                    //%%DEBUG
+                    //console.log("SPRITE CALLED:")
+                    //console.log(d)
+                    //console.log(" ")
+                switch (e.key) {
+//================ ## CHANGES MADE TO d.state for test
+                    case "ArrowLeft":
+                        d.x_v = -10
+                        //d.state = 'walk_W'
+                        break
+                    case "ArrowUp":
+                        d.y_v = -10
+                        //d.state = 'walk_N'
+                        break
+                    case "ArrowRight":
+                        d.x_v = 10
+                        //d.state = 'walk_E'
+                        break
+                    case "ArrowDown":
+                        d.y_v = 10
+                        //d.state = 'walk_S'
+                        break
+                    case " ":
+                        console.log("SPACE KEY PRESSED")
+                        d.changeAnimation('Shooting');
+                        shoot_projectile();
+                }
+            }
+            })
+        
+        };
+
+
+        document.body.onkeyup = (e) => {
+            drawables[FOREGROUND].forEach((d) => {
+
+                if(d == drawables[FOREGROUND][0]){
+                switch (e.key) {
+                    case "ArrowLeft":
+                    case "ArrowRight":
+                        d.x_v = 0
+                        break
+                    case "ArrowUp":
+                    case "ArrowDown":
+                        d.y_v = 0
+                        break
+                }
+            }
+            })
+        };
+//===================================================
+    </script>
+
+</body>
+</html>
