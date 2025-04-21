@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Athlete {
+public class User {
 
   @Id
   @GeneratedValue(strategy=GenerationType.AUTO)
@@ -16,9 +16,9 @@ public class Athlete {
 
   
 
-  protected Athlete() {}
+  protected User() {}
 
-  public Athlete(String firstName, String lastName) {
+  public User(String firstName, String lastName) {
     this.firstName = firstName;
     this.lastName = lastName;
   }
@@ -26,7 +26,7 @@ public class Athlete {
   @Override
   public String toString() {
     return String.format(
-        "Athlete[id=%d, firstName='%s', lastName='%s']",
+        "User[id=%d, firstName='%s', lastName='%s']",
         id, firstName, lastName);
   }
 
