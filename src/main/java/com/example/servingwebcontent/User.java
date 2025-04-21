@@ -4,7 +4,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+/*
+This class conecerns the user, everything that they hold and they would do.
+Users have:
+username 
+password
+chosen workout style??
+workoutlist array containing exercises
 
+*/
 @Entity
 public class User {
 
@@ -13,6 +21,7 @@ public class User {
   private Long id;
   private String firstName;
   private String lastName;
+  private String userName;
 
   
 
@@ -32,6 +41,10 @@ public class User {
 
   public Long getId() {
     return id;
+  }
+
+   public String getUserName() {
+    return userName;
   }
 
   public String getFirstName() {
