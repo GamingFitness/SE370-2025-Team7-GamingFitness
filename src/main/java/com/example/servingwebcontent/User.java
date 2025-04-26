@@ -1,57 +1,46 @@
 package com.example.servingwebcontent;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-/*
-This class conecerns the user, everything that they hold and they would do.
-Users have:
-username 
-password
-chosen workout style??
-workoutlist array containing exercises
+import jakarta.persistence.Table; // this is for the @table annotation to make a custom table with our sql to avoid clobbering standard values
+@Entity //entity means this is being stored in our database
+@Table(name = "app_user")  // Creating a table name that isn't a reserved keyword
 
-*/
-@Entity
+/*
+ * This class represents our user. Each user has a id, username, and training style. 
+ */
 public class User {
 
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
-  private Long id;
-  private String firstName;
-  private String lastName;
-  private String userName;
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id; //the user's id
+  private String userName; //the user's name
+  private String style; //the workout style that a user selects
+  public User() {} //constructor!
 
-  
-
-  protected User() {}
-
-  public User(String firstName, String lastName) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-  }
-
-  @Override
-  public String toString() {
-    return String.format(
-        "User[id=%d, firstName='%s', lastName='%s']",
-        id, firstName, lastName);
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-   public String getUserName() {
+  //methods
+  public String getUserName() {
     return userName;
   }
 
-  public String getFirstName() {
-    return firstName;
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 
-  public String getLastName() {
-    return lastName;
+  public long getId() {
+    return id;
   }
+ public void setId(long id) {
+    this.id = id;
+  }
+  public long getStyle() {
+    return id;
+  }
+ public void setStyle(String style) {
+    this.style=style;
+  }
+
+
+
 }
