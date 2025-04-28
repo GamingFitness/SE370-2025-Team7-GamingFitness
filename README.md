@@ -1,3 +1,8 @@
 Welcome To Gaming Fitness
 
-Our goal is to create a workout tracker that makes the process of keeping track of workouts fun and engaging. [TEST CASES FOR LEXICAL.pdf](https://github.com/user-attachments/files/19950004/TEST.CASES.FOR.LEXICAL.pdf)
+Our goal is to create a workout tracker that makes the process of keeping track of workouts fun and engaging. 
+
+Settup for running the software:
+
+FOR VS CODE:
+install the SPRING Boot extention pack from VS studio marketplace: https://marketplace.visualstudio.com/items?itemName=vmware.vscode-boot-dev-pack
