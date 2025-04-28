@@ -6,3 +6,11 @@ Settup for running the software:
 
 FOR VS CODE:
 install the SPRING Boot extention pack from VS studio marketplace: https://marketplace.visualstudio.com/items?itemName=vmware.vscode-boot-dev-pack
+
+
+
+Running The Program:
+In a new Terminal run mvn spring-boot:run then in a new tab in Safari or Firefox, (Chrome has issues), go to http://localhost:8080 and you should be able to play our game
+
+
+TroubleShooting:
