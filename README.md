@@ -10,7 +10,7 @@ install the SPRING Boot extention pack from VS studio marketplace: https://marke
 
 
 Running The Program:
-In a new Terminal run mvn spring-boot:run then in a new tab in Safari or Firefox, (Chrome has issues), go to http://localhost:8080 and you should be able to play our game
-
+In a new Terminal run mvn spring-boot:run then in a new tab in Safari or Firefox, (Chrome has issues), go to http://localhost:8080 and you should be able to use our application
 
 TroubleShooting:
+Should the Terminal give you a permission error run the following command: chmod +x ./mvnw
