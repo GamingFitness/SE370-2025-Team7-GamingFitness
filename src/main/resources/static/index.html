@@ -159,7 +159,7 @@ fetch('http://localhost:8080/app_users/2', {
         const FOREGROUND = 1;
         //NEW
         const PROJECTILE = 2;
-
+        SHOTS = 0;
         const canvas = document.querySelector("canvas");
         const context = canvas.getContext('2d');
         const drawables = []
@@ -323,6 +323,23 @@ fetch('http://localhost:8080/app_users/2', {
 
             // draw sprites
             drawables[FOREGROUND].forEach((d) => d.draw())
+            
+  // Minimal POST request
+        fetch('http://localhost:8080/app_users/1', { //making a fetch request to pull all the users
+          method: 'PUT', //we have to declare the POST method to use it. A POST creates a new instance, while a PUT request changes whats there
+          headers: { 
+                'Content-Type': 'application/json' //declaring content type as json
+              },
+          body: JSON.stringify({ //this is setting up the JSON we want to pass
+            userName: 'Frodo_Baggins', //this sets up the user's userName
+            password: 'Shire', //setting password, NOT SECURE JUST A TEST
+            style: 'BodyBuilding', //setting user style
+            shots: SHOTS
+              })
+            })
+              .then(response => response.json())  //this handles the Promise returned by fetch(). Response is the HTTP response object returned from the server, response.json is a method that reads the response body and parses it as JSON. It also returns a Promise with the parsed data
+              .then(data => console.log(data)); //This .then recieves the resolved val
+        }
         }
 
         //NEW will clear out arrays in preperation for next level
@@ -419,6 +436,7 @@ fetch('http://localhost:8080/app_users/2', {
                         console.log("SPACE KEY PRESSED")
                         d.changeAnimation('Shooting');
                         shoot_projectile();
+                        SHOTS++;
                 }
             }
             })
