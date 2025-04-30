@@ -112,20 +112,25 @@
 
 
 //:::::::::::::::::::::::::::=     >------JAVASCRIPT CODE STARTS HERE------<     =:::::::::::::::::::::::::::\\
-  // Minimal POST request
-  fetch('http://localhost:8080/app_users', { //making a fetch request to pull all the users
-  method: 'POST', //we have to declare the POST method to use it. A POST creates a new instance, while a PUT request changes whats there
-  headers: { 
-    'Content-Type': 'application/json' //declaring content type as json
-  },
-  body: JSON.stringify({ //this is setting up the JSON we want to pass
-    userName: 'Frodo_Baggins', //this sets up the user's userName
-    password: 'Shire', //setting password, NOT SECURE JUST A TEST
-    style: 'BodyBuilding' //setting user style
-  })
-})
-  .then(response => response.json())  //this handles the Promise returned by fetch(). Response is the HTTP response object returned from the server, response.json is a method that reads the response body and parses it as JSON. It also returns a Promise with the parsed data
-  .then(data => console.log(data)); //This .then recieves the resolved value from the previous Promise (Previous JSON data). datam is the actual Javascript object parsed from the JSON response. Console.log(data) simply outputs the data to the console.
+  
+
+
+//===================Minimal POST Request====================== 
+        fetch('http://localhost:8080/app_users', { //making a fetch request to pull all the users
+            method: 'POST', //we have to declare the POST method to use it. A POST creates a new instance, while a PUT request changes whats there
+            headers: { 
+                'Content-Type': 'application/json' //declaring content type as json
+            },
+            body: JSON.stringify({ //this is setting up the JSON we want to pass
+                userName: 'Frodo_Baggins', //this sets up the user's userName
+                password: 'Shire', //setting password, NOT SECURE JUST A TEST
+                style: 'BodyBuilding' //setting user style
+            })
+        })
+        .then(response => response.json())  //this handles the Promise returned by fetch(). Response is the HTTP response object returned from the server, response.json is a method that reads the response body and parses it as JSON. It also returns a Promise with the parsed data
+        .then(data => console.log(data)); //This .then recieves the resolved value from the previous Promise (Previous JSON data). datam is the actual Javascript object parsed from the JSON response. Console.log(data) simply outputs the data to the console.
+
+
 
 //===================VARIABLES====================== 
         const BACKGROUND = 0;
@@ -303,10 +308,11 @@
             // draw sprites
             drawables[FOREGROUND].forEach((d) => d.draw())
   
-            // Minimal POST request
+            // Minimal PUT request
             fetch('http://localhost:8080/app_users/1', { //making a fetch request to pull all the users
                 method: 'PUT', //we have to declare the POST method to use it. A POST creates a new instance, while a PUT request changes whats there
-              headers: { 
+                //method: 'PATCH',
+                headers: { 
                 'Content-Type': 'application/json' //declaring content type as json
               },
               body: JSON.stringify({ //this is setting up the JSON we want to pass
