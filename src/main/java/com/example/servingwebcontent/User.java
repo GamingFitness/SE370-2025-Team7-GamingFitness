@@ -19,6 +19,7 @@ public class User {
   private String password;
   private String style; //the workout style that a user selects
   private int shots;
+  private WorkoutProgram WeekProgram; //the weekly workout program that the user has
   public User() {} //constructor!
 
   //methods
@@ -50,4 +51,7 @@ public class User {
  public void setShots(int shots) {
     this.shots=shots;
   }
+
+
+
 }
