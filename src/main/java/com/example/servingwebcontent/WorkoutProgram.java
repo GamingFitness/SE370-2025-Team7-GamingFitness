@@ -1,6 +1,7 @@
 package  com.example.servingwebcontent;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class WorkoutProgram{
 /*
@@ -16,6 +17,20 @@ Rotuutine is a hashmap containing exercises mapped to different days to represen
  enum Day { //representing the week
         SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
     }
-HashMap<Day, Exercise> Routine;
+HashMap<Day, List<Exercise>> Routine; //hashmap with a list
 
+
+//this function will get a exercise on a specific day at a given index
+public Exercise getExercise(Day day, int index){
+    if (Routine != null && !Routine.isEmpty())
+        return Routine.get(day).get(index); //returning requested exercise
+    else return null;
+}
+//this function will set a new exercise on a given day at a specific index
+public void setExercise(Day day, int index, Exercise exercise){
+ if (Routine != null && !Routine.isEmpty())
+     Routine.get(day).set(index, exercise); //at key set at index new exercise
+ 
+  
+}
 }
