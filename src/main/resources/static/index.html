@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="style/main.css" />
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
     <canvas id="canvas"></canvas>
@@ -100,6 +101,7 @@
         
     </div> 
 
+    <script src="js/workoutlist.js"></script>
     <script type="text/javascript" src="js/actor.js"></script>
     <script src="js/signup.js"></script>
     <script src="js/login.js"></script>
@@ -148,7 +150,30 @@
 
         //NEW
         drawables[PROJECTILE] = []
+
+        // Projectile speed
+        const PROJECTILE_SPEED = 150;
+
+        // Workout list setup
+        const workout = new WorkoutList();
+        workout.setName("Endurance Workout");
+        workout.addExercise("5-10 Min Warm Up");
+        workout.addExercise("2 x 15 Squat (Bodyweight)");
+        workout.addExercise("2 x 12 Kneeling Push Ups");
+        workout.addExercise("3 x 10 Superman");
+        workout.addExercise("3 x 12 Glute Bridge");
+        workout.addExercise("3 x 20 Mountain Climber");;
+        workout.nextExercise();
         
+        // When exercise changes, respawn enemies
+        workout.setOnExerciseChange(() => {
+            // Clear old enemies
+            drawables[FOREGROUND] = drawables[FOREGROUND].filter(d => d.role !== "ENEMY");
+
+            // Spawn new enemies
+            SummonHorde1("MightGolem");
+        });
+
 
 
 //===================WEBSITE FUNCTIONS====================== 
@@ -263,7 +288,12 @@
             //Grabs the Players sprites from the json, sets as actor
             let animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
             let animdata = await animdataxhr.json()
-            const Player = new Actor(sprite,animdata, 1, 1, 0, 0, 0, "Idle","False","True","PLAYER");
+
+            // Height
+            const charHeight = 500;
+            const y = (canvas.height / 2) - (charHeight / 2);
+
+            const Player = new Actor(sprite,animdata, 1, y, 0, charHeight, 0, "Idle","False","True","PLAYER");
 
             //Pushes both actors into the foreground
             drawables[FOREGROUND].push(Player);
@@ -282,17 +312,22 @@
             //Grabs the Enemy sprites from the json, sets as actor
             let animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
             let animdata = await animdataxhr.json()
-            const Enemy1 = new Actor(sprite,animdata, 400, 0, 0, 0, 0, "Idle","False","True","ENEMY");
+
+            // Height
+            const charHeight = 500;
+            const y = (canvas.height / 2) - (charHeight / 2);
+
+            const Enemy1 = new Actor(sprite,animdata, 400, y, 400, charHeight, 0, "Idle","False","True","ENEMY");
             
             //Grabs the Enemies sprites from the json, sets as actor
             animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
             animdata = await animdataxhr.json()
-            const Enemy2 = new Actor(sprite,animdata, 500, 120, 0, 0, 0, "Idle","False","True","ENEMY");
+            const Enemy2 = new Actor(sprite,animdata, 800, y, 800, charHeight, 0, "Idle","False","True","ENEMY");
 
             //Grabs the Enemies sprites from the json, sets as actor
             animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
             animdata = await animdataxhr.json()
-            const Enemy3 = new Actor(sprite,animdata, 670, 30, 0, 0, 0, "Idle","False","True","ENEMY");
+            const Enemy3 = new Actor(sprite,animdata, 1200, y, 1200, charHeight, 0, "Idle","False","True","ENEMY");
 
             //Pushes both actors into the foreground
             drawables[FOREGROUND].push(Enemy1);
@@ -308,6 +343,13 @@
             // draw sprites
             drawables[FOREGROUND].forEach((d) => d.draw())
   
+            // Clean up
+            drawables[FOREGROUND] = drawables[FOREGROUND].filter(actor => actor && actor.exist === "True");
+
+            // Draw workout textbox
+            workout.updateText();
+            workout.draw(context, canvas);
+
             // Minimal PUT request
             fetch('http://localhost:8080/app_users/1', { //making a fetch request to pull all the users
                 method: 'PUT', //we have to declare the POST method to use it. A POST creates a new instance, while a PUT request changes whats there
@@ -324,6 +366,11 @@
             })
               .then(response => response.json())  //this handles the Promise returned by fetch(). Response is the HTTP response object returned from the server, response.json is a method that reads the response body and parses it as JSON. It also returns a Promise with the parsed data
               .then(data => console.log(data)); //This .then recieves the resolved val
+        }
+
+        // Load next exercise
+        function showNextExercise() {
+            workout.nextExercise();
         }
 
         //NEW will clear out arrays in preperation for next level
@@ -350,9 +397,17 @@
             let firing_posX = drawables[FOREGROUND][0].x;
             let firing_posY = drawables[FOREGROUND][0].y;
 
-            //const name = new Actor(name,sprite_json, x, y, height, width, x_v, start_state, exist);
-                                                                                                    //w h
-            drawables[FOREGROUND].push(new Actor("ThunderBullet",animdata, firing_posX, firing_posY, 0, 0, 50, "Projectile","False","True","PROJECTILE"));
+            //const name = new Actor(name,sprite_json, x, y, height, width, x_v, start_state, exist); //w h
+            const bullet = new Actor("ThunderBullet", animdata, firing_posX, firing_posY, 0, 0, PROJECTILE_SPEED, "Projectile","False","True","PROJECTILE");
+
+            bullet.onOutOfScreen = () => {
+                if (!workout.completed) {
+                    workout.nextExercise();
+                }
+            };
+
+            drawables[FOREGROUND].push(bullet);
+
         }
 
         //ALL IMPORTANT FUNCTION: Calls all necissary functions
@@ -400,27 +455,31 @@
                     //console.log(" ")
                 switch (e.key) {
 //================ ## CHANGES MADE TO d.state for test
-                    case "ArrowLeft":
-                        d.x_v = -10
-                        //d.state = 'walk_W'
-                        break
-                    case "ArrowUp":
-                        d.y_v = -10
-                        //d.state = 'walk_N'
-                        break
-                    case "ArrowRight":
-                        d.x_v = 10
-                        //d.state = 'walk_E'
-                        break
-                    case "ArrowDown":
-                        d.y_v = 10
-                        //d.state = 'walk_S'
-                        break
+                    // case "ArrowLeft":
+                    //     d.x_v = -10
+                    //     //d.state = 'walk_W'
+                    //     break
+                    // case "ArrowUp":
+                    //     d.y_v = -10
+                    //     //d.state = 'walk_N'
+                    //     break
+                    // case "ArrowRight":
+                    //     d.x_v = 10
+                    //     //d.state = 'walk_E'
+                    //     break
+                    // case "ArrowDown":
+                    //     d.y_v = 10
+                    //     //d.state = 'walk_S'
+                    //     break
                     case " ":
                         console.log("SPACE KEY PRESSED")
                         d.changeAnimation('Shooting');
                         shoot_projectile();
                         SHOTS++;
+                        if (!workout.completed) {
+                            workout.nextExercise();
+                        }
+                        break;
                 }
             }
             })
