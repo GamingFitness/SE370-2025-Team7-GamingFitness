@@ -101,12 +101,39 @@
         
     </div> 
 
-    <!-- ============ LEVEL SCREEN ============ -->
-    <div id="level-select" style="display:none;">
+    <!-- ============ LEVEL SCREEN Endurance============ -->
+    <div id="levelEndurance-select" style="display:none;">
         <div id="level-select-content">
             <h2>Select Level</h2>
-            <button onclick="startLevel(1)">Level 1</button>
-            <button onclick="startLevel(2)">Level 2</button>
+            <button onclick="startLevelEndurance(1)">Level 1</button>
+            <button onclick="startLevelEndurance(2)">Level 2</button>
+        </div>
+    </div>
+
+    <!-- ============ LEVEL SCREEN Strength============ -->
+    <div id="levelStrength-select" style="display:none;">
+        <div id="level-select-content">
+            <h2>Select Level</h2>
+            <button onclick="startLevelStrength(1)">Level 1AA</button>
+            <button onclick="startLevelStrength(2)">Level 2</button>
+        </div>
+    </div>
+
+    <!-- ============ LEVEL SCREEN Yoga============ -->
+    <div id="levelYoga-select" style="display:none;">
+        <div id="level-select-content">
+            <h2>Select Level</h2>
+            <button onclick="startLevelYoga(1)">Level 1</button>
+            <button onclick="startLevelYoga(2)">Level 2</button>
+        </div>
+    </div>
+
+    <!-- ============ LEVEL SCREEN Cardio============ -->
+    <div id="levelCardio-select" style="display:none;">
+        <div id="level-select-content">
+            <h2>Select Level</h2>
+            <button onclick="startLevelCardio(1)">Level 1</button>
+            <button onclick="startLevelCardio(2)">Level 2</button>
         </div>
     </div>
 
@@ -139,7 +166,7 @@
             })
         })
         .then(response => response.json())  //this handles the Promise returned by fetch(). Response is the HTTP response object returned from the server, response.json is a method that reads the response body and parses it as JSON. It also returns a Promise with the parsed data
-        .then(data => console.log(data)); //This .then recieves the resolved value from the previous Promise (Previous JSON data). datam is the actual Javascript object parsed from the JSON response. Console.log(data) simply outputs the data to the console.
+        //.then(data => console.log(data)); //This .then recieves the resolved value from the previous Promise (Previous JSON data). datam is the actual Javascript object parsed from the JSON response. Console.log(data) simply outputs the data to the console.
 
 
 
@@ -173,15 +200,6 @@
         // workout.addExercise("3 x 12 Glute Bridge");
         // workout.addExercise("3 x 20 Mountain Climber");
         // workout.nextExercise();
-        
-        // When exercise changes, respawn enemies
-        workout.setOnExerciseChange(() => {
-            // Clear old enemies
-            drawables[FOREGROUND] = drawables[FOREGROUND].filter(d => d.role !== "ENEMY");
-
-            // Spawn new enemies
-            SummonHorde1("MightGolem");
-        });
 
 
 
@@ -227,11 +245,44 @@
 //===================GAME FUNCTIONS====================== 
 
 //=======LEVELS=======
+
+        // When exercise changes, respawn enemies
+        workout.setOnExerciseChange(() => {
+            // Clear old enemies
+            //drawables[FOREGROUND] = drawables[FOREGROUND].filter(d => d.role !== "ENEMY");
+
+            // Spawn new enemies
+            if(window.selectedWorkout == "Endurance"){
+            setTimeout(() => {
+                SummonHorde2("SlimeOrc");
+            }, 5000);
+            }
+
+            if(window.selectedWorkout == "Strength"){
+            setTimeout(() => {
+                SummonHorde2("SlimeOrc");
+            }, 5000);
+            }
+
+            if(window.selectedWorkout == "Yoga"){
+            setTimeout(() => {
+                SummonHorde1("MightGolem");
+            }, 5000);
+            }
+        
+            if(window.selectedWorkout == "Cardio"){
+            setTimeout(() => {
+                SummonHorde1("SpiderCultist");
+            }, 5000);
+            }
+
+        });
+
         //show the game screen
         Endurance = () => {
             $('#main').hide();
             $('#selection-screen').hide();
-            $('#level-select').fadeIn(300);  // SHOW THE LEVEL SELECT SCREEN
+            $('#levelEndurance-select').fadeIn(300);  // SHOW THE LEVEL SELECT SCREEN
             window.selectedWorkout = "Endurance";
 
             // //Sets the background
@@ -241,63 +292,18 @@
             // SummonHorde1("MightGolem");
 
             // //---------SET FRAME RATE HERE------------
-            // setInterval(draw_loop, 5000 / 30);
+             setInterval(draw_loop, 5000 / 30);
             // console.log("FUNCTION: game() /IS RUNNING")
         }
 
-        Strength = () => {
-            $('#main').hide();
-            $('#selection-screen').hide();
-
-            //Sets the background
-            drawables[BACKGROUND].push(new Background('castle', 7))
-
-            get_player("VampiricOverlord");
-            SummonHorde1("MightGolem");
-
-            //---------SET FRAME RATE HERE------------
-            setInterval(draw_loop, 5000 / 30);
-            console.log("FUNCTION: game() /IS RUNNING")
-        }
-
-        Yoga = () => {
-            $('#main').hide();
-            $('#selection-screen').hide();
-
-            //Sets the background
-            drawables[BACKGROUND].push(new Background('beach', 7))
-
-            get_player("PowerGolem");
-            SummonHorde1("MightGolem");
-
-            //---------SET FRAME RATE HERE------------
-            setInterval(draw_loop, 5000 / 30);
-            console.log("FUNCTION: game() /IS RUNNING")
-        }
-
-        Cardio = () => {
-            $('#main').hide();
-            $('#selection-screen').hide();
-
-            //Sets the background
-            drawables[BACKGROUND].push(new Background('castle', 7))
-
-            get_player("VampiricOverlord");
-            SummonHorde1("MightGolem");
-
-            //---------SET FRAME RATE HERE------------
-            setInterval(draw_loop, 5000 / 30);
-            console.log("FUNCTION: game() /IS RUNNING")
-        }
-
         //START LEVEL
-        function startLevel(level) {
-            $('#level-select').hide();
+        function startLevelEndurance(level) {
+            $('#levelEndurance-select').hide();
             $('#main').hide();
 
-            drawables[BACKGROUND].push(new Background('castle', 7))
-            get_player("VampiricOverlord");
-            SummonHorde1("MightGolem");
+            drawables[BACKGROUND].push(new Background('desert', 7))
+            get_titanic_player("Juggernaut");
+            SummonHorde2("SlimeOrc");
 
             workout.setName("Endurance Workout - Level " + level);
             workout.exercises = [];
@@ -322,7 +328,182 @@
             }
 
             workout.nextExercise();
+            //setInterval(draw_loop, 5000 / 30);
+        }
+
+
+        Strength = () => {
+            $('#main').hide();
+            $('#selection-screen').hide();
+            $('#levelStrength-select').fadeIn(300);  // SHOW THE LEVEL SELECT SCREEN
+            window.selectedWorkout = "Strength";
             setInterval(draw_loop, 5000 / 30);
+
+            /*
+            $('#main').hide();
+            $('#selection-screen').hide();
+
+            //Sets the background
+            drawables[BACKGROUND].push(new Background('beach', 7))
+
+            get_player("PowerGolem");
+            SummonHorde1("MightGolem");
+
+            //---------SET FRAME RATE HERE------------
+            setInterval(draw_loop, 5000 / 30);
+            console.log("FUNCTION: game() /IS RUNNING")
+            */
+        }
+
+        //START LEVEL
+        function startLevelStrength(level) {
+            $('#levelStrength-select').hide();
+            $('#main').hide();
+
+            drawables[BACKGROUND].push(new Background('desert', 7))
+            get_titanic_player("Juggernaut");
+            SummonHorde2("SlimeOrc");
+
+            workout.setName("Strength Workout - Level " + level);
+            workout.exercises = [];
+
+            if (level === 1) {
+                workout.setName("Endurance Workout Level 1");
+                workout.addExercise("5-10 Min Warm Up");
+                workout.addExercise("2 x 15 Squat (Bodyweight)");
+                workout.addExercise("2 x 12 Kneeling Push Ups");
+                workout.addExercise("3 x 10 Superman");
+                workout.addExercise("3 x 12 Glute Bridge");
+                workout.addExercise("3 x 20 Mountain Climber");
+            } else if (level === 2) {
+                workout.setName("Endurance Workout Level 2");
+                workout.addExercise("5-10 Min Warm Up");
+                workout.addExercise("3 x 12 Bulgarian Split Squat (Each leg)");
+                workout.addExercise("3 x 15 Push Ups");
+                workout.addExercise("3 x 12 Inverted Row");
+                workout.addExercise("3 x 8 Nordic Hamstring Curls");
+                workout.addExercise("3 x 12 Single Leg Glute Bridge (Each leg)");
+                workout.addExercise("3 x 15 Superman");
+            }
+
+            workout.nextExercise();
+            //setInterval(draw_loop, 5000 / 30);
+        }
+
+//---------------------
+
+        Yoga = () => {
+            $('#main').hide();
+            $('#selection-screen').hide();
+            $('#levelYoga-select').fadeIn(300);  // SHOW THE LEVEL SELECT SCREEN
+            window.selectedWorkout = "Yoga";
+            setInterval(draw_loop, 5000 / 30);
+            /*
+            $('#main').hide();
+            $('#selection-screen').hide();
+
+            //Sets the background
+            drawables[BACKGROUND].push(new Background('castle', 7))
+
+            get_player("VampiricOverlord");
+            SummonHorde1("SpiderCultist");
+
+            //---------SET FRAME RATE HERE------------
+            setInterval(draw_loop, 5000 / 30);
+            console.log("FUNCTION: game() /IS RUNNING")
+            */
+        }
+
+        //START LEVEL
+        function startLevelYoga(level) {
+            $('#levelYoga-select').hide();
+            $('#main').hide();
+
+            drawables[BACKGROUND].push(new Background('beach', 7))
+            get_player("PowerGolem");
+            SummonHorde1("MightGolem");
+
+            workout.setName("Yoga Workout - Level " + level);
+            workout.exercises = [];
+
+            if (level === 1) {
+                workout.setName("Endurance Workout Level 1");
+                workout.addExercise("5-10 Min Warm Up");
+                workout.addExercise("2 x 15 Squat (Bodyweight)");
+                workout.addExercise("2 x 12 Kneeling Push Ups");
+                workout.addExercise("3 x 10 Superman");
+                workout.addExercise("3 x 12 Glute Bridge");
+                workout.addExercise("3 x 20 Mountain Climber");
+            } else if (level === 2) {
+                workout.setName("Endurance Workout Level 2");
+                workout.addExercise("5-10 Min Warm Up");
+                workout.addExercise("3 x 12 Bulgarian Split Squat (Each leg)");
+                workout.addExercise("3 x 15 Push Ups");
+                workout.addExercise("3 x 12 Inverted Row");
+                workout.addExercise("3 x 8 Nordic Hamstring Curls");
+                workout.addExercise("3 x 12 Single Leg Glute Bridge (Each leg)");
+                workout.addExercise("3 x 15 Superman");
+            }
+
+            workout.nextExercise();
+            //setInterval(draw_loop, 5000 / 30);
+        }
+
+        Cardio = () => {
+            $('#main').hide();
+            $('#selection-screen').hide();
+            $('#levelCardio-select').fadeIn(300);  // SHOW THE LEVEL SELECT SCREEN
+            window.selectedWorkout = "Cardio";
+            setInterval(draw_loop, 5000 / 30);
+            /*
+            $('#main').hide();
+            $('#selection-screen').hide();
+
+            //Sets the background
+            drawables[BACKGROUND].push(new Background('castle', 7))
+
+            get_player("VampiricOverlord");
+            SummonHorde1("SpiderCultist");
+
+            //---------SET FRAME RATE HERE------------
+            setInterval(draw_loop, 5000 / 30);
+            console.log("FUNCTION: game() /IS RUNNING")
+            */
+        }
+
+        //START LEVEL
+        function startLevelCardio(level) {
+            $('#levelCardio-select').hide();
+            $('#main').hide();
+
+            drawables[BACKGROUND].push(new Background('castle', 7))
+            get_player("VampiricOverlord");
+            SummonHorde1("SpiderCultist");
+
+            workout.setName("Cardio Workout - Level " + level);
+            workout.exercises = [];
+
+            if (level === 1) {
+                workout.setName("Endurance Workout Level 1");
+                workout.addExercise("5-10 Min Warm Up");
+                workout.addExercise("2 x 15 Squat (Bodyweight)");
+                workout.addExercise("2 x 12 Kneeling Push Ups");
+                workout.addExercise("3 x 10 Superman");
+                workout.addExercise("3 x 12 Glute Bridge");
+                workout.addExercise("3 x 20 Mountain Climber");
+            } else if (level === 2) {
+                workout.setName("Endurance Workout Level 2");
+                workout.addExercise("5-10 Min Warm Up");
+                workout.addExercise("3 x 12 Bulgarian Split Squat (Each leg)");
+                workout.addExercise("3 x 15 Push Ups");
+                workout.addExercise("3 x 12 Inverted Row");
+                workout.addExercise("3 x 8 Nordic Hamstring Curls");
+                workout.addExercise("3 x 12 Single Leg Glute Bridge (Each leg)");
+                workout.addExercise("3 x 15 Superman");
+            }
+
+            workout.nextExercise();
+            //setInterval(draw_loop, 5000 / 30);
         }
 
 
@@ -337,7 +518,9 @@
             let animdata = await animdataxhr.json()
 
             // Height
+
             const charHeight = 500;
+
             const y = (canvas.height / 2) - (charHeight / 2);
 
             const Player = new Actor(sprite,animdata, 1, y, 0, charHeight, 0, "Idle","False","True","PLAYER");
@@ -352,6 +535,33 @@
             //console.log("PLAYER:")
             //console.log(Player)
         }
+
+        //Gathers animation data for select sprites and pushes each as an Actor
+        get_titanic_player = async (sprite) => {
+
+            //Grabs the Players sprites from the json, sets as actor
+            let animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
+            let animdata = await animdataxhr.json()
+
+            // Height
+
+            const charHeight = 1200;
+
+            const y = (canvas.height / 2) - (charHeight / 2);
+
+            const Player = new Actor(sprite,animdata, 1, y, 0, charHeight, 0, "Idle","False","True","PLAYER");
+
+            //Pushes both actors into the foreground
+            drawables[FOREGROUND].push(Player);
+
+            console.log("PLAYER initial data:")
+            console.log(drawables[FOREGROUND][0])
+
+            //%%DEBUG
+            //console.log("PLAYER:")
+            //console.log(Player)
+        }
+
 
         //NEW TEST
         SummonHorde1 = async (sprite) => {
@@ -382,6 +592,35 @@
             drawables[FOREGROUND].push(Enemy3);
         }
 
+        //NEW TEST
+        SummonHorde2 = async (sprite) => {
+            
+            //Grabs the Enemy sprites from the json, sets as actor
+            let animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
+            let animdata = await animdataxhr.json()
+
+            // Height
+            const charHeight = 500;
+            const y = (canvas.height / 2) - (charHeight / 2);
+
+            const Enemy1 = new Actor(sprite,animdata, 400, 900, 400, charHeight, 0, "Idle","False","True","ENEMY");
+            
+            //Grabs the Enemies sprites from the json, sets as actor
+            animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
+            animdata = await animdataxhr.json()
+            const Enemy2 = new Actor(sprite,animdata, 800, 900, 800, charHeight, 0, "Idle","False","True","ENEMY");
+
+            //Grabs the Enemies sprites from the json, sets as actor
+            animdataxhr = await fetch("sprites/" + sprite + "/animationData.json")
+            animdata = await animdataxhr.json()
+            const Enemy3 = new Actor(sprite,animdata, 1200, 900, 1200, charHeight, 0, "Idle","False","True","ENEMY");
+
+            //Pushes both actors into the foreground
+            drawables[FOREGROUND].push(Enemy1);
+            drawables[FOREGROUND].push(Enemy2);
+            drawables[FOREGROUND].push(Enemy3);
+        }
+
         //Draws all background and foreground objects
         draw_loop = () => {
             // draws background
@@ -393,9 +632,13 @@
             // Clean up
             drawables[FOREGROUND] = drawables[FOREGROUND].filter(actor => actor && actor.exist === "True");
 
+            
+
             // Draw workout textbox
             workout.updateText();
             workout.draw(context, canvas);
+
+            
 
             // Minimal PUT request
             fetch('http://localhost:8080/app_users/1', { //making a fetch request to pull all the users
@@ -412,13 +655,18 @@
               })
             })
               .then(response => response.json())  //this handles the Promise returned by fetch(). Response is the HTTP response object returned from the server, response.json is a method that reads the response body and parses it as JSON. It also returns a Promise with the parsed data
-              .then(data => console.log(data)); //This .then recieves the resolved val
+              //.then(data => console.log(data)); //This .then recieves the resolved val
         }
 
         // Load next exercise
+        
+        /*
         function showNextExercise() {
+            console.log("showNextExercise");
+            //SummonHorde1("SlimeOrc");
             workout.nextExercise();
         }
+        */
 
         //NEW will clear out arrays in preperation for next level
         clear_level = async () => {
@@ -447,6 +695,7 @@
             //const name = new Actor(name,sprite_json, x, y, height, width, x_v, start_state, exist); //w h
             const bullet = new Actor("ThunderBullet", animdata, firing_posX, firing_posY, 0, 0, PROJECTILE_SPEED, "Projectile","False","True","PROJECTILE");
 
+            
             bullet.onOutOfScreen = () => {
                 if (!workout.completed) {
                     workout.nextExercise();
@@ -454,6 +703,7 @@
                     showEndScreen();
                 }
             };
+            
 
             drawables[FOREGROUND].push(bullet);
 
@@ -490,6 +740,10 @@
     //keys entered twice, drawables[FOREGROUND].forEach((d) 
     //Fixed by only working for first actor in array
 
+    //setTimeout(() => {
+           //     SummonHorde1("SlimeOrc");
+           // }, 5000);
+
         document.body.onkeydown = (e) => {
             
             drawables[FOREGROUND].forEach((d) => {
@@ -497,6 +751,7 @@
                 //%%DEBUG
                 //console.log("PLAYER (in keydown):")
                 //console.log(drawables[FOREGROUND][0])
+                
                 if(d == drawables[FOREGROUND][0]){
                     //%%DEBUG
                     //console.log("SPRITE CALLED:")
@@ -525,12 +780,14 @@
                         d.changeAnimation('Shooting');
                         shoot_projectile();
                         SHOTS++;
+                        
                         if (!workout.completed) {
                             workout.nextExercise();
                         } else {
                             showEndScreen();
                         }
                         break;
+                        
                 }
             }
             })
