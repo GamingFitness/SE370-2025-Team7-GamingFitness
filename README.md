@@ -15,7 +15,4 @@ In a new Terminal run mvn spring-boot:run then in a new tab in Safari or Firefox
 TroubleShooting:
 Should the Terminal give you a permission error run the following command: chmod +x ./mvnw
 
-On Journal, notes, and Code. 
-With how our code is currently settup it would break if we sort everything into the code, journal and notes folders. We would like to remedy this but due to time-constraints we've decided that the best tempory solution would be to provide the pathways to the folders.
-Journal: src/main/resources/static/Journal
-Notes:
+
